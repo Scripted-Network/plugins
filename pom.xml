@@ -22,6 +22,7 @@
     <modules>
         <module>Hub</module>
         <module>BuildServer</module>
+        <module>Sumo</module>
     </modules>
 
     <properties>
