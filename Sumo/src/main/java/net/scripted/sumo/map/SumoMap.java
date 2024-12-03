@@ -1,6 +1,6 @@
-package map;
+package net.scripted.sumo.map;
 
-import game.SumoGame;
+import net.scripted.sumo.game.SumoGame;
 import net.scripted.core.ScriptedPlugin;
 import net.scripted.core.map.MapManager;
 import net.scripted.gamecore.map.AbstractGameMap;

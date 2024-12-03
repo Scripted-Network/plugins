@@ -166,7 +166,7 @@
                  <executions>
                      <execution>
                          <id>default-deploy</id>
-                         <phase>deploy</phase>
+                         <net.scripted.sumo.phase>deploy</net.scripted.sumo.phase>
                          <goals>
                              <goal>deploy</goal>
                          </goals>
