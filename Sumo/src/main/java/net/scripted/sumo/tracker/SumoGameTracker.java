@@ -28,6 +28,11 @@ public class SumoGameTracker extends GameInstanceTracker<SumoGame> {
     }
 
     @Override
+    protected int getMinPlayersPerGame() {
+        return 2;
+    }
+
+    @Override
     protected int getMaxPlayersPerGame() {
         return 2;
     }
