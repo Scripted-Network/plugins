@@ -18,4 +18,9 @@ public class SumoMap extends AbstractGameMap<SumoGame> {
     protected List<String> getMapNames() {
         return List.of("default");
     }
+
+    @Override
+    public int getMapRadius() {
+        return 8;
+    }
 }
