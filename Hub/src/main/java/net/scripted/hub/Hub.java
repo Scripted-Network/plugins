@@ -62,10 +62,12 @@ public class Hub extends ScriptedPlugin implements Listener {
     }
 
     @EventHandler
-    public void interact(PlayerInteractAtEntityEvent e){
+    public void onPlayerJoin(PlayerJoinEvent e){
+        Player p = e.getPlayer();
+
+
 
     }
-
 
 
 

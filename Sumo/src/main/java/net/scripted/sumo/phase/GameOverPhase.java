@@ -4,15 +4,16 @@ import net.scripted.gamecore.phase.AbstractPhase;
 import net.scripted.gamecore.phase.Phase;
 import net.scripted.sumo.game.SumoGame;
 
-public class MovementTrackerPhase extends AbstractPhase<SumoGame> {
+public class GameOverPhase extends AbstractPhase<SumoGame> {
 
-    public MovementTrackerPhase(SumoGame game) {
+
+    public GameOverPhase(SumoGame game) {
         super(game);
     }
 
     @Override
     protected void start() {
-
+        game.getGameToggleManager()
     }
 
     @Override

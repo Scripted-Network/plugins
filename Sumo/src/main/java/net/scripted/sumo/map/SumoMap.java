@@ -1,5 +1,6 @@
 package net.scripted.sumo.map;
 
+import net.scripted.core.commons.location.LocationType;
 import net.scripted.sumo.game.SumoGame;
 import net.scripted.core.ScriptedPlugin;
 import net.scripted.core.map.MapManager;
@@ -22,5 +23,9 @@ public class SumoMap extends AbstractGameMap<SumoGame> {
     @Override
     public int getMapRadius() {
         return 8;
+    }
+
+    public enum SumoMapLocationType implements LocationType {
+        SPAWN_LOCATION, LOWER_ARENA_CORNER, UPPER_ARENA_CORNER;
     }
 }
