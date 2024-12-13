@@ -8,13 +8,16 @@ import net.scripted.core.commons.location.LocationUtils;
 import net.scripted.gamecore.event.GamePlayerLeaveEvent;
 import net.scripted.gamecore.lifecycle.Lifecycle;
 import net.scripted.gamecore.phase.AbstractPhase;
+import net.scripted.gamecore.toggle.ToggleType;
 import net.scripted.sumo.event.SumoGameOverEvent;
 import net.scripted.sumo.game.SumoGame;
 import net.scripted.sumo.map.SumoMap;
 import net.scripted.sumo.toggle.OutOfBoundsCheckToggle;
+import net.scripted.sumo.toggle.SumoToggleTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,6 +35,7 @@ public class GameStartPhase extends AbstractPhase<SumoGame> {
         //From this phase on if a player leaves the other player wins
 
         game.getEventBus().subscribe(GamePlayerLeaveEvent.class, event -> {
+
             if(!event.getGame().equals(game))return;
             //Game-over current player wins
             handleGameOver(event.getPlayer());
@@ -43,18 +47,20 @@ public class GameStartPhase extends AbstractPhase<SumoGame> {
             handleGameOver(event.getLoser());
         });
 
-        //Teleport players to spawn locations
 
+        //Out of bounds check
+        game.getGameToggleManager().enable(SumoToggleTypes.OUT_OF_BOUNDS);
+
+
+        //Teleport players to spawn locations
         List<Location> locations = game.getMapData().getLocations(SumoMap.SumoMapLocationType.SPAWN_LOCATION);
 
         for(Player player : game.getPlayerTracker().getBukkitPlayers()){
             Location randomLocation = LocationUtils.getRandomLocation(locations);
             locations.remove(randomLocation);
 
-            player.teleport(randomLocation);
+            Bukkit.getScheduler().runTask(game.getPlugin(), ()->player.teleport(randomLocation));
         }
-
-        game.getGameToggleManager().addToggle(new OutOfBoundsCheckToggle(game));
     }
 
     private void handleGameOver(UUID loser) {
@@ -88,7 +94,10 @@ public class GameStartPhase extends AbstractPhase<SumoGame> {
 
     @Override
     protected void end() {
-
+        game.getEventBus().unsubscribe(GamePlayerLeaveEvent.class);
+        game.getEventBus().unsubscribe(SumoGameOverEvent.class);
+        game.getGameToggleManager().disable(SumoToggleTypes.OUT_OF_BOUNDS);
+        game.getEventBus().unsubscribe(PlayerMoveEvent.class);
     }
 
     @Override

@@ -3,8 +3,11 @@ package net.scripted.hub;
 import net.scripted.core.PluginInfo;
 import net.scripted.core.ScriptedPlugin;
 
+import net.scripted.core.commons.location.LocationType;
+import net.scripted.core.commons.location.ScriptedLocation;
 import net.scripted.core.commons.menu.MenuManager;
 import net.scripted.core.commons.menu.button.MenuButton;
+import net.scripted.core.map.ScriptedMap;
 import net.scripted.entity.ScriptedEntity;
 
 
@@ -19,6 +22,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -28,7 +32,6 @@ public class Hub extends ScriptedPlugin implements Listener {
 
 
 
-    private World world;
 
     @Override
     protected void onPluginLoad() {
@@ -62,8 +65,26 @@ public class Hub extends ScriptedPlugin implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e){
-        Player p = e.getPlayer();
+    public void onPlayerSpawn(PlayerSpawnLocationEvent e){
+        Player player = e.getPlayer();
+        World world = player.getWorld();
+
+        ScriptedMap scriptedMap = getMapManager().getScriptedMap(world.getName() + ".json");
+
+        if(scriptedMap == null){
+            getLogger().info("Map for world %s is null".formatted(world.getName()));
+            return;
+        }
+
+        Location location = scriptedMap.getLocation(ScriptedLocation.DefaultLocationTypes.MAIN_SPAWN);
+
+        if(location == null){
+            getLogger().warning("Main spawn doesnt exist");
+            return;
+        }
+
+        e.setSpawnLocation(location);
+
 
 
 

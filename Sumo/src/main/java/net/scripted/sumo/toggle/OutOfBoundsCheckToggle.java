@@ -16,26 +16,33 @@ import java.util.List;
 
 public class OutOfBoundsCheckToggle extends AbstractGameToggle {
 
-    private final SumoGame game;
-
     public OutOfBoundsCheckToggle(SumoGame game) {
         super(game);
-        this.game = game;
     }
 
     @Override
     protected void setup() {
+        SumoGame game = (SumoGame) this.game;
         game.getEventBus().subscribe(PlayerMoveEvent.class, event -> {
-
+            game.getLogger().log("MOVE1");
             Player player = event.getPlayer();
-            if(!isEnabled() || !isGameEntity(player))return;
+
+            if(!isEnabled()){
+                game.getLogger().log("Toggle not enabled!");
+                return;
+            }
+
+            if(!isGameEntity(player)){
+                game.getLogger().log("Player not in game!");
+                return;
+            }
 
             if(event.getTo() == null)return;
 
             if(event.getTo().toVector().equals(event.getFrom().toVector()))return;
 
             Location newLocation = event.getTo();
-
+            game.getLogger().log("MOVE2");
             if(!game.getAreaSize().contains(new Vector(newLocation.getX(), newLocation.getY(), newLocation.getZ()))){
                 SumoGameOverEvent gameOverEvent = new SumoGameOverEvent(game, player.getUniqueId());
                 Bukkit.getPluginManager().callEvent(gameOverEvent);
@@ -45,7 +52,12 @@ public class OutOfBoundsCheckToggle extends AbstractGameToggle {
     }
 
     @Override
+    protected boolean enableByDefault() {
+        return false;
+    }
+
+    @Override
     public ToggleType getToggleType() {
-        return null;
+        return SumoToggleTypes.OUT_OF_BOUNDS;
     }
 }

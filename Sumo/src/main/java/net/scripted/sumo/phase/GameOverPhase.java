@@ -3,6 +3,9 @@ package net.scripted.sumo.phase;
 import net.scripted.gamecore.phase.AbstractPhase;
 import net.scripted.gamecore.phase.Phase;
 import net.scripted.sumo.game.SumoGame;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.entity.Player;
 
 public class GameOverPhase extends AbstractPhase<SumoGame> {
 
@@ -13,7 +16,11 @@ public class GameOverPhase extends AbstractPhase<SumoGame> {
 
     @Override
     protected void start() {
-        game.getGameToggleManager()
+        for(Player player : game.getPlayerTracker().getBukkitPlayers()){
+            player.setAllowFlight(true);
+            player.setGameMode(GameMode.ADVENTURE);
+        }
+        Bukkit.getScheduler().runTaskLaterAsynchronously(game.getPlugin(), this::nextPhase, 100L);
     }
 
     @Override
